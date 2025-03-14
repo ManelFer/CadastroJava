@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
-import { Link } from 'expo-router';
+import { createTable, salvarUsuario } from '../src/services/database';
 
 const App = () => {
   const [nome, setNome] = useState('');
@@ -10,30 +10,39 @@ const App = () => {
   const [idade, setIdade] = useState('');
   const [endereco, setEndereco] = useState('');
 
+  // Cria a tabela ao carregar o componente
+  useEffect(() => {
+    createTable();
+  }, []);
+
   const handleCadastro = () => {
     if (!nome || !sobrenome || !email || !idade || !endereco) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
 
-    // Exibe os dados no console
-    console.log({
+    const idadeNumber = parseInt(idade, 10); // Converte a idade para número
+
+    salvarUsuario(
       nome,
       sobrenome,
       email,
-      idade,
+      idadeNumber,
       endereco,
-    });
-
-    // Exibe uma mensagem de sucesso
-    Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-
-    // Limpa os campos após o cadastro
-    setNome('');
-    setSobrenome('');
-    setEmail('');
-    setIdade('');
-    setEndereco('');
+      () => {
+        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+        // Limpa os campos após o cadastro
+        setNome('');
+        setSobrenome('');
+        setEmail('');
+        setIdade('');
+        setEndereco('');
+      },
+      (error: any) => {
+        Alert.alert('Erro', 'Ocorreu um erro ao salvar os dados.');
+        console.error(error);
+      }
+    );
   };
 
   return (
