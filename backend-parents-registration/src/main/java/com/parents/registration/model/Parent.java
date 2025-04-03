@@ -7,8 +7,9 @@ import java.time.LocalDateTime;
 public class Parent {
     private Long id;
     private String name;
+    private String surname;
     private String email;
-    private String phone;
+    private Integer age;
     private String address;
     private LocalDateTime createdAt;
 } 

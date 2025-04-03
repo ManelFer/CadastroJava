@@ -1,5 +1,7 @@
-C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\dao\ParentDAO.java
-C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\database\DatabaseHelper.java
+C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\model\Student.java
+C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\ParentsRegistrationApplication.java
 C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\Main.java
 C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\model\Parent.java
-C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\model\Student.java
+C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\controller\ParentController.java
+C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\dao\ParentDAO.java
+C:\Users\manoel.matos\Documents\GitHub\CadastroJava\backend-parents-registration\src\main\java\com\parents\registration\database\DatabaseHelper.java

@@ -13,16 +13,18 @@ import {
 
 interface ParentFormData {
   name: string;
+  surname: string;
   email: string;
-  phone: string;
+  age: string;
   address: string;
 }
 
 export default function App() {
   const [formData, setFormData] = useState<ParentFormData>({
     name: '',
+    surname: '',
     email: '',
-    phone: '',
+    age: '',
     address: ''
   });
 
@@ -35,8 +37,8 @@ export default function App() {
 
   const handleSubmit = async () => {
     // Validate form data
-    if (!formData.name || !formData.email) {
-      Alert.alert('Erro', 'Nome e email são campos obrigatórios');
+    if (!formData.name || !formData.surname || !formData.email) {
+      Alert.alert('Erro', 'Nome, sobrenome e email são campos obrigatórios');
       return;
     }
 
@@ -46,7 +48,10 @@ export default function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          age: formData.age ? parseInt(formData.age) : null
+        }),
       });
 
       if (!response.ok) {
@@ -69,8 +74,9 @@ export default function App() {
   const resetForm = () => {
     setFormData({
       name: '',
+      surname: '',
       email: '',
-      phone: '',
+      age: '',
       address: ''
     });
   };
@@ -83,13 +89,24 @@ export default function App() {
       <Text style={styles.title}>Cadastro de Pais de Alunos</Text>
       
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Nome Completo</Text>
+        <Text style={styles.label}>Nome</Text>
         <TextInput
           style={styles.input}
           value={formData.name}
           onChangeText={(text) => handleChange('name', text)}
-          placeholder="Digite o nome completo"
-          accessibilityLabel="Campo para inserir o nome completo"
+          placeholder="Digite o nome"
+          accessibilityLabel="Campo para inserir o nome"
+        />
+      </View>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Sobrenome</Text>
+        <TextInput
+          style={styles.input}
+          value={formData.surname}
+          onChangeText={(text) => handleChange('surname', text)}
+          placeholder="Digite o sobrenome"
+          accessibilityLabel="Campo para inserir o sobrenome"
         />
       </View>
 
@@ -108,14 +125,14 @@ export default function App() {
       </View>
 
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Telefone</Text>
+        <Text style={styles.label}>Idade</Text>
         <TextInput
           style={styles.input}
-          value={formData.phone}
-          onChangeText={(text) => handleChange('phone', text)}
-          placeholder="Digite o telefone"
-          keyboardType="phone-pad"
-          accessibilityLabel="Campo para inserir o telefone"
+          value={formData.age}
+          onChangeText={(text) => handleChange('age', text.replace(/[^0-9]/g, ''))}
+          placeholder="Digite a idade"
+          keyboardType="number-pad"
+          accessibilityLabel="Campo para inserir a idade"
         />
       </View>
 
