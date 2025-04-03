@@ -1,1 +1,1 @@
-export const API_URL = 'http://10.0.1.83:8081'; // Substitua pelo IP da sua máquina
+export const API_URL = 'http://localhost:8080'; // Local development server

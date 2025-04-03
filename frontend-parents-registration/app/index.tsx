@@ -12,19 +12,17 @@ import {
 } from 'react-native';
 
 interface ParentFormData {
-  firstName: string;
-  lastName: string;
-  age: string;
+  name: string;
   email: string;
+  phone: string;
   address: string;
 }
 
 export default function App() {
   const [formData, setFormData] = useState<ParentFormData>({
-    firstName: '',
-    lastName: '',
-    age: '',
+    name: '',
     email: '',
+    phone: '',
     address: ''
   });
 
@@ -37,39 +35,42 @@ export default function App() {
 
   const handleSubmit = async () => {
     // Validate form data
+    if (!formData.name || !formData.email) {
+      Alert.alert('Erro', 'Nome e email são campos obrigatórios');
+      return;
+    }
+
     try {
-      const response = await fetch (`${API_URL}/parents`, {
+      const response = await fetch(`${API_URL}/api/parents`, {
         method: 'POST',
         headers: {
-          'content-type': 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          age: formData.age ? parseInt(formData.age) : null,
-        }),
+        body: JSON.stringify(formData),
       });
-      const data = await response.json();
-      if (!response.ok){
-        throw new Error(data.message || 'Erro ao cadastrar');
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erro ao cadastrar');
       }
+
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       resetForm();
-    }catch (error) {
+    } catch (error) {
       console.error('Error:', error);
       if (error instanceof Error) {
-        Alert.alert('Erro', error.message || 'Erro ao cadastrar');
+        Alert.alert('Erro', error.message);
       } else {
         Alert.alert('Erro', 'Erro ao cadastrar');
       }
     }
-  }
+  };
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
-      lastName: '',
-      age: '',
+      name: '',
       email: '',
+      phone: '',
       address: ''
     });
   };
@@ -82,36 +83,13 @@ export default function App() {
       <Text style={styles.title}>Cadastro de Pais de Alunos</Text>
       
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Nome</Text>
+        <Text style={styles.label}>Nome Completo</Text>
         <TextInput
           style={styles.input}
-          value={formData.firstName}
-          onChangeText={(text) => handleChange('firstName', text)}
-          placeholder="Digite o nome"
-          accessibilityLabel="Campo para inserir o nome"
-        />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Sobrenome</Text>
-        <TextInput
-          style={styles.input}
-          value={formData.lastName}
-          onChangeText={(text) => handleChange('lastName', text)}
-          placeholder="Digite o sobrenome"
-          accessibilityLabel="Campo para inserir o sobrenome"
-        />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Idade</Text>
-        <TextInput
-          style={styles.input}
-          value={formData.age}
-          onChangeText={(text) => handleChange('age', text.replace(/[^0-9]/g, ''))}
-          placeholder="Digite a idade"
-          keyboardType="number-pad"
-          accessibilityLabel="Campo para inserir a idade"
+          value={formData.name}
+          onChangeText={(text) => handleChange('name', text)}
+          placeholder="Digite o nome completo"
+          accessibilityLabel="Campo para inserir o nome completo"
         />
       </View>
 
@@ -126,6 +104,18 @@ export default function App() {
           autoCapitalize="none"
           autoCorrect={false}
           accessibilityLabel="Campo para inserir o email"
+        />
+      </View>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Telefone</Text>
+        <TextInput
+          style={styles.input}
+          value={formData.phone}
+          onChangeText={(text) => handleChange('phone', text)}
+          placeholder="Digite o telefone"
+          keyboardType="phone-pad"
+          accessibilityLabel="Campo para inserir o telefone"
         />
       </View>
 

@@ -1,0 +1,5 @@
+com\parents\registration\dao\ParentDAO.class
+com\parents\registration\Main.class
+com\parents\registration\model\Parent.class
+com\parents\registration\database\DatabaseHelper.class
+com\parents\registration\model\Student.class
