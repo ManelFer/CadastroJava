@@ -20,8 +20,13 @@ public class ParentDAO {
 
     public void create(Parent parent) throws SQLException {
         String sql = "INSERT INTO parents (name, surname, email, age, address) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = dbHelper.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dbHelper.getConnection();
+            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
             pstmt.setString(1, parent.getName());
             pstmt.setString(2, parent.getSurname());
@@ -31,21 +36,28 @@ public class ParentDAO {
             
             pstmt.executeUpdate();
             
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    parent.setId(rs.getLong(1));
-                }
+            rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                parent.setId(rs.getLong(1));
             }
+        } finally {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
+            // Don't close the connection here, let DatabaseHelper manage it
         }
     }
 
     public Parent findById(Long id) throws SQLException {
         String sql = "SELECT * FROM parents WHERE id = ?";
-        try (Connection conn = dbHelper.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dbHelper.getConnection();
+            pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1, id);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             
             if (rs.next()) {
                 Parent parent = new Parent();
@@ -58,17 +70,24 @@ public class ParentDAO {
                 parent.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 return parent;
             }
+            return null;
+        } finally {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
         }
-        return null;
     }
 
     public List<Parent> findAll() throws SQLException {
         List<Parent> parents = new ArrayList<>();
         String sql = "SELECT * FROM parents";
-        
-        try (Connection conn = dbHelper.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dbHelper.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
             
             while (rs.next()) {
                 Parent parent = new Parent();
@@ -81,15 +100,21 @@ public class ParentDAO {
                 parent.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 parents.add(parent);
             }
+            return parents;
+        } finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
         }
-        return parents;
     }
 
     public void update(Parent parent) throws SQLException {
         String sql = "UPDATE parents SET name = ?, surname = ?, email = ?, age = ?, address = ? WHERE id = ?";
-        
-        try (Connection conn = dbHelper.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dbHelper.getConnection();
+            pstmt = conn.prepareStatement(sql);
             
             pstmt.setString(1, parent.getName());
             pstmt.setString(2, parent.getSurname());
@@ -99,17 +124,23 @@ public class ParentDAO {
             pstmt.setLong(6, parent.getId());
             
             pstmt.executeUpdate();
+        } finally {
+            if (pstmt != null) pstmt.close();
         }
     }
 
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM parents WHERE id = ?";
-        
-        try (Connection conn = dbHelper.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dbHelper.getConnection();
+            pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
+        } finally {
+            if (pstmt != null) pstmt.close();
         }
     }
 } 

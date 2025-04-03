@@ -12,20 +12,36 @@ public class DatabaseHelper {
     private Connection connection;
 
     public DatabaseHelper() {
+        initializeConnection();
+    }
+
+    private void initializeConnection() {
         try {
-            connection = DriverManager.getConnection(DB_URL);
-            onCreate();
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection(DB_URL);
+                onCreate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                initializeConnection();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return connection;
     }
 
     private void onCreate() {
-        try (Statement statement = connection.createStatement()) {
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            
             // Drop existing tables if they exist
             statement.execute("DROP TABLE IF EXISTS parents");
             statement.execute("DROP TABLE IF EXISTS students");
@@ -54,6 +70,14 @@ public class DatabaseHelper {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
