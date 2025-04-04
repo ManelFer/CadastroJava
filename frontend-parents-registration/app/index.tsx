@@ -31,7 +31,7 @@ export default function App() {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Test backend connection when component mounts
+    // Teste de conexão com o backend ao iniciar o aplicativo
     testConnection();
   }, []);
 
@@ -59,7 +59,7 @@ export default function App() {
   };
 
   const handleSubmit = async () => {
-    // Validate form data
+    // Validação simples dos campos obrigatórios
     if (!formData.name || !formData.surname || !formData.email) {
       Alert.alert('Erro', 'Nome, sobrenome e email são campos obrigatórios');
       return;

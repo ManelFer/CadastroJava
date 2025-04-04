@@ -35,7 +35,7 @@ public class ParentController {
     @PostMapping
     public ResponseEntity<?> createParent(@RequestBody Parent parent) {
         try {
-            // Validate required fields
+            // Validar campos necessários
             if (parent.getName() == null || parent.getName().trim().isEmpty() ||
                 parent.getSurname() == null || parent.getSurname().trim().isEmpty() ||
                 parent.getEmail() == null || parent.getEmail().trim().isEmpty()) {

@@ -19,7 +19,7 @@ public class DatabaseHelper {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = DriverManager.getConnection(DB_URL);
-                onCreate();
+                onCreate(); // Metodo solicitado para criar as tabelas
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,11 +42,11 @@ public class DatabaseHelper {
         try {
             statement = connection.createStatement();
             
-            // Drop existing tables if they exist
+            // Dropar tabelas se existirem
             statement.execute("DROP TABLE IF EXISTS parents");
             statement.execute("DROP TABLE IF EXISTS students");
 
-            // Create Parents table
+            // Criar tabela Parents
             statement.execute("CREATE TABLE IF NOT EXISTS parents (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "name TEXT NOT NULL," +
@@ -57,7 +57,7 @@ public class DatabaseHelper {
                     "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ")");
 
-            // Create Students table
+            // Criar tabela estudantes para uma possivel atualização no frontend
             statement.execute("CREATE TABLE IF NOT EXISTS students (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "parent_id INTEGER," +

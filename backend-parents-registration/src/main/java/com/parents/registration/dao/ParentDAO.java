@@ -43,7 +43,7 @@ public class ParentDAO {
         } finally {
             if (rs != null) rs.close();
             if (pstmt != null) pstmt.close();
-            // Don't close the connection here, let DatabaseHelper manage it
+            
         }
     }
 

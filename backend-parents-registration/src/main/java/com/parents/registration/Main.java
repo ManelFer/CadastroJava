@@ -24,7 +24,7 @@ public class Main implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-            // Create a new parent
+            // Criar novo objeto Parent
             Parent parent = new Parent();
             parent.setName("John");
             parent.setSurname("Doe");
@@ -32,11 +32,11 @@ public class Main implements CommandLineRunner {
             parent.setAge(35);
             parent.setAddress("123 Main St");
 
-            // Save the parent
+            // Salvar o objeto Parent no banco de dados
             parentDAO.create(parent);
             System.out.println("Parent created with ID: " + parent.getId());
 
-            // Find all parents
+            // Buscar o objeto Parent pelo ID
             System.out.println("\nAll parents in the database:");
             parentDAO.findAll().forEach(p -> System.out.println("ID: " + p.getId() + ", Name: " + p.getName()));
 
