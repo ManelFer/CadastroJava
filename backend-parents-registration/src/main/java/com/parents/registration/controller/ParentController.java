@@ -24,6 +24,14 @@ public class ParentController {
         this.parentDAO = parentDAO;
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> testConnection() {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("message", "Backend is working!");
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping
     public ResponseEntity<?> createParent(@RequestBody Parent parent) {
         try {

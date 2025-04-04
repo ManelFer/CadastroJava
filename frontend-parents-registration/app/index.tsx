@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {API_URL} from '../config'
 
 import { 
@@ -28,6 +28,29 @@ export default function App() {
     address: ''
   });
 
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    // Test backend connection when component mounts
+    testConnection();
+  }, []);
+
+  const testConnection = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/parents/test`);
+      if (response.ok) {
+        setIsConnected(true);
+        console.log('Backend connection successful');
+      } else {
+        setIsConnected(false);
+        console.error('Backend connection failed');
+      }
+    } catch (error) {
+      setIsConnected(false);
+      console.error('Error testing connection:', error);
+    }
+  };
+
   const handleChange = (name: keyof ParentFormData, value: string) => {
     setFormData({
       ...formData,
@@ -43,6 +66,7 @@ export default function App() {
     }
 
     try {
+      console.log('Submitting form data:', formData);
       const response = await fetch(`${API_URL}/api/parents`, {
         method: 'POST',
         headers: {
@@ -54,20 +78,28 @@ export default function App() {
         }),
       });
 
+      console.log('Response status:', response.status);
+      const contentType = response.headers.get('content-type');
+      console.log('Response content type:', contentType);
+
       if (!response.ok) {
-        const contentType = response.headers.get('content-type');
         let errorMessage = 'Erro ao cadastrar';
         
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
+          console.error('Error response:', errorData);
         } else {
           const text = await response.text();
           errorMessage = text || errorMessage;
+          console.error('Error text:', text);
         }
         
         throw new Error(errorMessage);
       }
+
+      const data = await response.json();
+      console.log('Success response:', data);
 
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       resetForm();
@@ -97,6 +129,12 @@ export default function App() {
       keyboardShouldPersistTaps="handled"
     >
       <Text style={styles.title}>Cadastro de Pais de Alunos</Text>
+      
+      <View style={styles.connectionStatus}>
+        <Text style={[styles.statusText, isConnected ? styles.connected : styles.disconnected]}>
+          {isConnected ? 'Conectado ao servidor' : 'Desconectado do servidor'}
+        </Text>
+      </View>
       
       <View style={styles.formGroup}>
         <Text style={styles.label}>Nome</Text>
@@ -183,6 +221,22 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: 'center',
     color: '#333',
+  },
+  connectionStatus: {
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#f0f0f0',
+  },
+  statusText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  connected: {
+    color: '#4CAF50',
+  },
+  disconnected: {
+    color: '#f44336',
   },
   formGroup: {
     marginBottom: 20,
