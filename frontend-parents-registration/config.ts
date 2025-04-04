@@ -1,1 +1,1 @@
-export const API_URL = 'http://localhost:8080'; // Local development server
+export const API_URL = 'http://10.0.1.114:8080'; // Local development server
